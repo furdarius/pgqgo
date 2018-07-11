@@ -11,9 +11,10 @@ import (
 )
 
 // LogProcessor used to output received batch id, it's size and data.
+// Implements pgqgo.BatchProcessor.
 type LogProcessor struct{}
 
-// Process inherited from BatchProcessor.
+// Process consequentially output to stdout each events data from batch.
 func (p *LogProcessor) Process(ctx context.Context, batchID int, events []pgqgo.Event) ([]pgqgo.RetryEvent, error) {
 	log.Printf("batch received: batch_id = %d, size = %d\n", batchID, len(events))
 

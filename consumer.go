@@ -55,6 +55,9 @@ type RetryEvent struct {
 
 // BatchProcessor provides events batch processing functionality.
 type BatchProcessor interface {
+	// Process called when new batch received from queue and must be processed.
+	// If nil, nil returned then ACK will be send to server and batch marked as successfully processed.
+	// Otherwise, if not nil error returned then batch will be repeated.
 	Process(ctx context.Context, batchID int, events []Event) ([]RetryEvent, error)
 }
 
@@ -79,6 +82,7 @@ func NewConsumer(db *sql.DB, processor BatchProcessor, name string) *Consumer {
 }
 
 // Register used to register consumer for queue.
+// After registration queue will persist events until successfully processing.
 // @see https://github.com/markokr/skytools/blob/master/sql/pgq/functions/pgq.register_consumer.sql
 func (c *Consumer) Register(ctx context.Context, queue string) error {
 	const q = `select pgq.register_consumer($1, $2) as st;`
