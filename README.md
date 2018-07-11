@@ -64,4 +64,4 @@ func main() {
 }
 ```
 
-[More examples here](https://github.com/furdarius/pgqgo/example)
+[More examples here](https://github.com/furdarius/pgqgo/tree/master/example)
